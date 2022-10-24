@@ -1,44 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { UserDao } from 'src/dao/users.dao';
+import { User } from 'src/entities/entity';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userDao: UserDao) {}
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find();
+  getAllUsers(): Promise<User[]> {
+    return this.userDao.getAllUsers();
   }
 
-  async getUserById(id: number): Promise<User[]> {
-    return await this.userRepository.find({
-      where: [{ id }],
-    });
+  getUserById(id: number): Promise<User[]> {
+    return this.userDao.getUserById(id);
   }
 
-  async createUser(user: User) {
-    return await this.userRepository.save(user);
+  createUser(user: User) {
+    return this.userDao.createUser(user);
   }
 
-  async updateUser(id: number, user: User) {
-    const editUser = await this.userRepository.findOne({
-      where: [{ id }],
-    });
-    if (!user) {
-      throw new NotFoundException('User is not found.');
-    }
-    editUser.username = user.username;
-    editUser.password = user.password;
-    await this.userRepository.save(editUser);
-    return editUser;
+  updateUser(id: number, user: User) {
+    return this.userDao.updateUser(id, user);
   }
 
-  async deleteUser(id) {
-    const user = await this.userRepository.delete(id);
-    return user;
+  deleteUser(id: number) {
+    return this.userDao.deleteUser(id);
   }
 }

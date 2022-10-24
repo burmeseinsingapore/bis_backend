@@ -8,7 +8,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/entity';
 import { AuthInterceptor } from 'src/interceptor/auth.interceptor';
 import { UsersService } from 'src/services/users.service';
 
